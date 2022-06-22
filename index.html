@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script> 
+</head>
+<body>
+    <h2>Mario bingo</h2>
+  <div class = "main-section">
+    <div id = "canvas" class="pixel">
+        
+    </div>
+    <div class = "settings">
+      <p>SEED:</p>
+      <input type = "text" id = "seed-input" value = "among">
+      <p>CARD SIZE:</p>
+      <input type = "text" id = "canvas-resolution-input" value = "5">
+      <button id = "btnUpdate">CLEAR AND UPDATE</button>
+    </div>
+  </div>
+</body>
+<script src="//cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/seedrandom.min.js">
+</script>
+<script>
+
+ 
+  let canvas =  document.getElementById("canvas");
+  let seedInput = document.getElementById("seed-input")
+  let resInput = document.getElementById("canvas-resolution-input")
+  let btnUpdate = document.getElementById("btnUpdate")
+  let seedStr = seedInput.value;
+  let max_size = 700
+  let canvas_size = 5
+  let pixel_size = Math.round(max_size /canvas_size)
+  let myrng
+  let challenge_array = [
+  "challenge 0",
+  "challenge 1",
+  "challenge 2",
+  "challenge 3",
+  "challenge 4",
+  "challenge 5",
+  "challenge 6",
+  "challenge 7",
+  "challenge 8",
+  "challenge 9",
+  "challenge 10",
+  "challenge 11",
+  "challenge 12",
+  "challenge 13",
+  "challenge 14",
+  "challenge 15",
+  "challenge 16",
+  "challenge 17",
+  "challenge 18",
+  "challenge 19",
+  "challenge 20",
+  "challenge 21",
+  "challenge 22",
+  "challenge 23",
+  "challenge 24",
+  "challenge 25",
+  "challenge 26",
+  "challenge 27",
+  "challenge 28",
+  "challenge 29"];
+
+  
+
+  let current_challenge_array = make_challenge_array()
+  console.log(current_challenge_array)
+
+  function make_challenge_array(){
+    var myrng = new Math.seedrandom(seedStr);
+    let challengeSet = new Set()
+    while (challengeSet.size < canvas_size * canvas_size){
+      let rng = Math.floor(myrng() * challenge_array.length -1)+1;
+      challengeSet.add(rng)
+    }    
+    return Array.from(challengeSet)
+  }
+
+  function makeCanvas(){
+    current_challenge_array = make_challenge_array()
+    canvas.style.width = pixel_size * canvas_size +"px";
+    canvas.style.heigh = pixel_size * canvas_size +"px";
+    for (let i = 0; i < canvas_size * canvas_size; i++){
+      let newPixel = document.createElement("div")
+      newPixel.classList.add('pixel');
+      newPixel.style.width = pixel_size +"px";
+      newPixel.style.height = pixel_size +"px";
+      newPixel.textContent = challenge_array[current_challenge_array[i]]
+      newPixel.addEventListener("click", function (e){
+          colourPixel(e)
+      })
+      canvas.appendChild(newPixel)
+    }
+    
+  }
+  
+  function colourPixel(e){
+      console.log(e)
+      e.originalTarget.style.background = "blue";
+  }
+  
+  function updateCanvas(){
+    //current_challenge_array =  make_challenge_array()
+    seedStr = seedInput.value;
+
+    console.log(resInput.value)
+    //console.log(sizeInput.value)
+    while (canvas.firstChild) {
+     canvas.removeChild(canvas.firstChild);
+    }
+    
+    if (resInput.value >= 2 && resInput.value <= 16){
+      canvas_size = resInput.value;
+    }else{
+      alert("Resolution must be an interger between 2 and 16 " + resInput.value)
+    }
+    
+    pixel_size = Math.round(max_size /canvas_size)
+    console.log(canvas_size)
+    console.log(max_size)
+    makeCanvas()
+  }
+  makeCanvas()
+  
+  btnUpdate.addEventListener("click", function(){updateCanvas()})
+</script>
+
+</html>
