@@ -20,6 +20,10 @@
       <p>CARD SIZE:</p>
       <input type = "text" id = "canvas-resolution-input" value = "5">
       <button id = "btnUpdate">CLEAR AND UPDATE</button>
+      <p> ADD FAVORITES: <br>always include the following challenges:</p>
+      <input type = "text" id = "fav-input" value = "10">
+      <button id = "btnAddFav">ADD TO FAVORITES</button>
+      <p id = "fav-list">FAVORITES LIST:</p>
     </div>
   </div>
 </body>
@@ -31,23 +35,28 @@
   let canvas =  document.getElementById("canvas");
   let seedInput = document.getElementById("seed-input")
   let resInput = document.getElementById("canvas-resolution-input")
+  let favInput = document.getElementById("fav-input") 
   let btnUpdate = document.getElementById("btnUpdate")
+  let btnAddFav = document.getElementById("btnAddFav")
+  let fav_list = document.getElementById("fav-list")
+  let fav_array = []
   let seedStr = seedInput.value;
   let max_size = 700
   let canvas_size = 5
   let pixel_size = Math.round(max_size /canvas_size)
   let myrng
+
   let challenge_array = [
-  "challenge 0",
-  "challenge 1",
-  "challenge 2",
-  "challenge 3",
-  "challenge 4",
-  "challenge 5",
-  "challenge 6",
-  "challenge 7",
-  "challenge 8",
-  "challenge 9",
+  "challenge 00",
+  "challenge 01",
+  "challenge 02",
+  "challenge 03",
+  "challenge 04",
+  "challenge 05",
+  "challenge 06",
+  "challenge 07",
+  "challenge 08",
+  "challenge 09",
   "challenge 10",
   "challenge 11",
   "challenge 12",
@@ -77,11 +86,33 @@
   function make_challenge_array(){
     var myrng = new Math.seedrandom(seedStr);
     let challengeSet = new Set()
+
+    for (let i = 0; i < fav_array.length; i++){
+     challengeSet.add(fav_array[i]);
+    }
+
     while (challengeSet.size < canvas_size * canvas_size){
       let rng = Math.floor(myrng() * challenge_array.length -1)+1;
       challengeSet.add(rng)
     }    
     return Array.from(challengeSet)
+  }
+
+  function addFav(){
+    console.log(favInput.value)
+    if(favInput.value != 0){
+      console.log('messer')
+      fav_array.push(favInput.value);
+      console.log(fav_array);
+      fav_list.textContent = "";
+      fav_list.textContent = "FAVORITES LIST: " 
+      console.log(fav_array.length);
+      for (let i = 0; i < fav_array.length; i++){
+        console.log('in');
+        fav_list.textContent += " " + fav_array[i];
+      }
+    }
+    
   }
 
   function makeCanvas(){
@@ -128,9 +159,10 @@
     console.log(max_size)
     makeCanvas()
   }
-  makeCanvas()
+  updateCanvas()
   
   btnUpdate.addEventListener("click", function(){updateCanvas()})
+  btnAddFav.addEventListener("click", function(){addFav()})
 </script>
 
 </html>
